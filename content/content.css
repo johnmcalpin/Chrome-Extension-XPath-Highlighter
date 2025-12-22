@@ -1,0 +1,117 @@
+/* XPath Highlighter Styles */
+
+/* Hover state when extension is active (lower priority) */
+.xpath-hover-highlight {
+  outline: 2px dashed #FF9800 !important;
+  outline-offset: 1px !important;
+  background-color: rgba(255, 152, 0, 0.1) !important;
+  cursor: crosshair !important;
+}
+
+/* Highlighted elements (higher priority - comes after hover) */
+.xpath-highlight {
+  outline: 3px solid #4CAF50 !important;
+  outline-offset: 2px !important;
+  background-color: rgba(76, 175, 80, 0.15) !important;
+}
+
+/* Ensure highlight takes precedence over hover */
+.xpath-highlight.xpath-hover-highlight {
+  outline: 3px solid #4CAF50 !important;
+  outline-offset: 2px !important;
+  background-color: rgba(76, 175, 80, 0.15) !important;
+}
+
+/* Active extension indicator overlay */
+.xpath-extension-active-overlay {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  z-index: 2147483647;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  pointer-events: none;
+  animation: xpath-fade-in 0.3s ease;
+}
+
+.xpath-extension-active-overlay::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  background: #fff;
+  border-radius: 50%;
+  animation: xpath-pulse 1.5s infinite;
+}
+
+@keyframes xpath-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes xpath-pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(0.8);
+  }
+}
+
+/* Prevent text selection while hovering in active mode */
+.xpath-extension-active * {
+  user-select: none !important;
+}
+
+/* Element info tooltip */
+.xpath-element-tooltip {
+  position: fixed;
+  background: #1a1a2e;
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+  font-size: 11px;
+  z-index: 2147483646;
+  pointer-events: none;
+  max-width: 400px;
+  word-break: break-all;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  animation: xpath-tooltip-fade 0.15s ease;
+}
+
+.xpath-element-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 20px;
+  border: 6px solid transparent;
+  border-top-color: #1a1a2e;
+}
+
+@keyframes xpath-tooltip-fade {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

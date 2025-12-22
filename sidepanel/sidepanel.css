@@ -1,0 +1,294 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #333;
+  background: #f8f9fa;
+}
+
+.container {
+  padding: 16px;
+  max-width: 100%;
+}
+
+h1 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a1a2e;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+/* Toggle Section */
+.toggle-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.toggle {
+  position: relative;
+  display: inline-block;
+  width: 48px;
+  height: 26px;
+}
+
+.toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.3s;
+  border-radius: 26px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.3s;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+input:checked + .slider {
+  background-color: #4CAF50;
+}
+
+input:checked + .slider:before {
+  transform: translateX(22px);
+}
+
+.toggle-label {
+  font-weight: 500;
+  color: #555;
+}
+
+/* Status Indicator */
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: #fff;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  border: 1px solid #e0e0e0;
+}
+
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #ccc;
+  transition: background 0.3s;
+}
+
+.status-indicator.active .status-dot {
+  background: #4CAF50;
+  box-shadow: 0 0 8px rgba(76, 175, 80, 0.5);
+}
+
+.status-text {
+  font-size: 13px;
+  color: #666;
+}
+
+/* Input Section */
+.input-section {
+  margin-bottom: 12px;
+}
+
+.input-section label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 6px;
+  color: #444;
+}
+
+#xpathInput {
+  width: 100%;
+  padding: 10px 12px;
+  border: 2px solid #e0e0e0;
+  border-radius: 6px;
+  font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+  font-size: 12px;
+  resize: vertical;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  background: #fff;
+}
+
+#xpathInput:focus {
+  outline: none;
+  border-color: #4CAF50;
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+}
+
+#xpathInput::placeholder {
+  color: #aaa;
+}
+
+.input-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+/* Buttons */
+.btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: #4CAF50;
+  color: white;
+  flex: 1;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #43a047;
+}
+
+.btn-secondary {
+  background: #e0e0e0;
+  color: #555;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: #d0d0d0;
+}
+
+/* Match Info */
+.match-info {
+  padding: 8px 12px;
+  background: #e8f5e9;
+  border-radius: 6px;
+  margin-bottom: 12px;
+  text-align: center;
+  border: 1px solid #c8e6c9;
+}
+
+.match-info.error {
+  background: #ffebee;
+  border-color: #ffcdd2;
+  color: #c62828;
+}
+
+.match-info.warning {
+  background: #fff3e0;
+  border-color: #ffe0b2;
+  color: #e65100;
+}
+
+#matchCount {
+  font-size: 13px;
+  font-weight: 500;
+  color: #2e7d32;
+}
+
+.match-info.error #matchCount {
+  color: #c62828;
+}
+
+.match-info.warning #matchCount {
+  color: #e65100;
+}
+
+/* Copy Section */
+.copy-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.btn-copy {
+  background: #2196F3;
+  color: white;
+  flex: 1;
+}
+
+.btn-copy:hover:not(:disabled) {
+  background: #1e88e5;
+}
+
+.copy-feedback {
+  font-size: 12px;
+  color: #4CAF50;
+  font-weight: 500;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.copy-feedback.show {
+  opacity: 1;
+}
+
+/* Instructions */
+.instructions {
+  background: #fff;
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid #e0e0e0;
+}
+
+.instructions h3 {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #444;
+}
+
+.instructions ol {
+  padding-left: 20px;
+  margin-bottom: 8px;
+}
+
+.instructions li {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 4px;
+}
+
+.instructions .note {
+  font-size: 11px;
+  color: #888;
+  font-style: italic;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #eee;
+}

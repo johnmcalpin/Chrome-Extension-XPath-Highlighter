@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>XPath Highlighter</title>
+  <link rel="stylesheet" href="sidepanel.css">
+</head>
+<body>
+  <div class="container">
+    <h1>XPath Highlighter</h1>
+
+    <div class="toggle-section">
+      <label class="toggle">
+        <input type="checkbox" id="activateToggle">
+        <span class="slider"></span>
+      </label>
+      <span class="toggle-label">Extension Active</span>
+    </div>
+
+    <div class="status-indicator" id="statusIndicator">
+      <span class="status-dot"></span>
+      <span class="status-text">Inactive</span>
+    </div>
+
+    <div class="input-section">
+      <label for="xpathInput">XPath Expression:</label>
+      <textarea
+        id="xpathInput"
+        placeholder="Enter XPath or click an element on the page..."
+        rows="3"
+      ></textarea>
+      <div class="input-actions">
+        <button id="highlightBtn" class="btn btn-primary" disabled>Highlight</button>
+        <button id="clearBtn" class="btn btn-secondary">Clear</button>
+      </div>
+    </div>
+
+    <div class="match-info" id="matchInfo">
+      <span id="matchCount">0 elements matched</span>
+    </div>
+
+    <div class="copy-section">
+      <button id="copyBtn" class="btn btn-copy" disabled>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+        </svg>
+        Copy XPath
+      </button>
+      <span id="copyFeedback" class="copy-feedback">Copied!</span>
+    </div>
+
+    <div class="instructions">
+      <h3>How to use:</h3>
+      <ol>
+        <li>Toggle the extension <strong>ON</strong></li>
+        <li><strong>Click any element</strong> on the page to generate its XPath</li>
+        <li>Or <strong>paste/edit</strong> an XPath above and click Highlight</li>
+        <li>Edit the XPath to refine your selection</li>
+      </ol>
+      <p class="note">When active, clicking links won't navigate - they'll just show the XPath.</p>
+    </div>
+  </div>
+
+  <script src="sidepanel.js"></script>
+</body>
+</html>
