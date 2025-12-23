@@ -2,6 +2,30 @@
 (function() {
   'use strict';
 
+  // Check if extension context is valid
+  function isExtensionContextValid() {
+    try {
+      return chrome.runtime && chrome.runtime.id;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  // Safe message sender that handles invalidated context
+  function safeSendMessage(message) {
+    if (!isExtensionContextValid()) {
+      console.log('[XPath Highlighter] Extension context invalidated, cleaning up');
+      cleanup();
+      return Promise.resolve(null);
+    }
+    return chrome.runtime.sendMessage(message).catch(err => {
+      if (err.message?.includes('Extension context invalidated')) {
+        cleanup();
+      }
+      return null;
+    });
+  }
+
   // State
   let isActive = false;
   let currentXPath = '';
@@ -276,11 +300,11 @@
     hideTooltip();
 
     // Send XPath to sidepanel
-    chrome.runtime.sendMessage({
+    safeSendMessage({
       type: 'XPATH_GENERATED',
       xpath: xpath,
       count: result.count
-    }).catch(err => console.log('[XPath Highlighter] Message send error:', err));
+    });
 
     return false;
   }
@@ -307,6 +331,13 @@
       }
       hideTooltip();
     }
+  }
+
+  // Cleanup function for when extension context is invalidated
+  function cleanup() {
+    setActive(false);
+    clearHighlights();
+    console.log('[XPath Highlighter] Cleaned up after context invalidation');
   }
 
   // Initialize event listeners
@@ -336,6 +367,12 @@
 
   // Message handler
   chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    // Check if context is still valid
+    if (!isExtensionContextValid()) {
+      cleanup();
+      return false;
+    }
+
     console.log('[XPath Highlighter] Received message:', message.type, message);
 
     switch (message.type) {
@@ -375,7 +412,5 @@
   init();
 
   // Notify background script that content script is ready and get persisted state
-  chrome.runtime.sendMessage({ type: 'CONTENT_SCRIPT_READY' }).catch(() => {
-    // Background might not be ready yet
-  });
+  safeSendMessage({ type: 'CONTENT_SCRIPT_READY' });
 })();

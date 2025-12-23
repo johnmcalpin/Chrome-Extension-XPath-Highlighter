@@ -3,7 +3,6 @@ const activateToggle = document.getElementById('activateToggle');
 const statusIndicator = document.getElementById('statusIndicator');
 const statusText = statusIndicator.querySelector('.status-text');
 const xpathInput = document.getElementById('xpathInput');
-const highlightBtn = document.getElementById('highlightBtn');
 const clearBtn = document.getElementById('clearBtn');
 const matchInfo = document.getElementById('matchInfo');
 const matchCount = document.getElementById('matchCount');
@@ -141,7 +140,6 @@ function updateStatusUI(isActive) {
 // Update button states based on input
 function updateButtonStates() {
   const hasInput = xpathInput.value.trim().length > 0;
-  highlightBtn.disabled = !hasInput;
   copyBtn.disabled = !hasInput;
 }
 
@@ -179,27 +177,6 @@ activateToggle.addEventListener('change', async () => {
     await sendMessageToContentScript({ type: 'CLEAR_HIGHLIGHTS' });
     await persistState({ currentXPath: '', matchCount: 0 });
     updateMatchCount(0);
-  }
-});
-
-// Handle highlight button click
-highlightBtn.addEventListener('click', async () => {
-  const xpath = xpathInput.value.trim();
-  if (!xpath) return;
-
-  const response = await sendMessageToContentScript({
-    type: 'HIGHLIGHT_XPATH',
-    xpath
-  });
-
-  if (response) {
-    if (response.error) {
-      updateMatchCount(0, response.error);
-      await persistState({ currentXPath: xpath, matchCount: 0 });
-    } else {
-      updateMatchCount(response.count);
-      await persistState({ currentXPath: xpath, matchCount: response.count });
-    }
   }
 });
 

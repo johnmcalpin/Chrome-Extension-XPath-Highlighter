@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "XPath Highlighter",
   "version": "1.0.0",
-  "description": "Instantly generate XPath expressions by clicking any element on a webpage. View results in a convenient side panel with copy functionality.",
+  "description": "Instantly generate and validate XPath expressions by clicking any element on a webpage with a convenient side panelfunctionality.",
   
   "author": "John McAlpin",
   "homepage_url": "https://www.johnmcalpin.com",
