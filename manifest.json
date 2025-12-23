@@ -2,38 +2,41 @@
   "manifest_version": 3,
   "name": "XPath Highlighter",
   "version": "1.0.0",
-  "description": "Bidirectional XPath tool - highlight elements from XPath or generate XPath from clicked elements",
-  "permissions": [
-    "activeTab",
-    "scripting",
-    "sidePanel",
-    "tabs"
-  ],
-  "action": {
-    "default_icon": {
-      "16": "icons/icon16.png",
-      "48": "icons/icon48.png",
-      "128": "icons/icon128.png"
-    },
-    "default_title": "Open XPath Highlighter"
-  },
+  "description": "Instantly generate XPath expressions by clicking any element on a webpage. View results in a convenient side panel with copy functionality.",
+  
+  "author": "John McAlpin",
+  "homepage_url": "https://www.johnmcalpin.com",
+  
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
   },
-  "side_panel": {
-    "default_path": "sidepanel/sidepanel.html"
+  
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "sidePanel"
+  ],
+  
+  "background": {
+    "service_worker": "background/background.js"
   },
+  
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
       "js": ["content/content.js"],
       "css": ["content/content.css"],
-      "run_at": "document_end"
+      "run_at": "document_idle"
     }
   ],
-  "background": {
-    "service_worker": "background/background.js"
+  
+  "side_panel": {
+    "default_path": "sidepanel/sidepanel.html"
+  },
+  
+  "action": {
+    "default_title": "Open XPath Highlighter"
   }
 }
