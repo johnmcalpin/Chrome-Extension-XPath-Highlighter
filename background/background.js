@@ -14,6 +14,7 @@ function getTabState(tabId) {
     tabStates.set(tabId, {
       isActive: false,
       currentXPath: '',
+      currentCSS: '',
       matchCount: 0
     });
   }
@@ -75,11 +76,16 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             isActive: true
           }).catch(() => {});
 
-          // Re-highlight if there was an xpath
+          // Re-highlight using whichever selector was last active
           if (state.currentXPath) {
             chrome.tabs.sendMessage(tabId, {
               type: 'HIGHLIGHT_XPATH',
               xpath: state.currentXPath
+            }).catch(() => {});
+          } else if (state.currentCSS) {
+            chrome.tabs.sendMessage(tabId, {
+              type: 'HIGHLIGHT_CSS',
+              css: state.currentCSS
             }).catch(() => {});
           }
         }
@@ -105,7 +111,7 @@ chrome.runtime.onConnect.addListener((port) => {
       // Sidepanel closed, deactivate all tabs
       for (const [tabId, state] of tabStates) {
         if (state.isActive) {
-          setTabState(tabId, { isActive: false, currentXPath: '', matchCount: 0 });
+          setTabState(tabId, { isActive: false, currentXPath: '', currentCSS: '', matchCount: 0 });
           // Tell content script to deactivate
           chrome.tabs.sendMessage(tabId, {
             type: 'SET_ACTIVE',
@@ -128,6 +134,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     if (state.isActive) {
       setTabState(tabId, {
         currentXPath: '',
+        currentCSS: '',
         matchCount: 0
       });
     }

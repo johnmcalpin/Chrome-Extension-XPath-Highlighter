@@ -133,6 +133,65 @@ input:checked + .slider:before {
   margin-bottom: 12px;
 }
 
+.field-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.field-header label {
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--deep-space);
+  font-size: 13px;
+}
+
+.btn-icon-copy {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 3px 5px;
+  color: var(--electric-blue);
+  opacity: 0.5;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  transition: opacity 0.2s;
+}
+
+.btn-icon-copy:hover:not(:disabled) { opacity: 1; }
+.btn-icon-copy:disabled { opacity: 0.2; cursor: not-allowed; }
+
+.convert-note {
+  font-size: 11px;
+  color: #9CA3AF;
+  min-height: 15px;
+  margin-top: 3px;
+}
+
+.convert-note.unavailable { color: #F59E0B; }
+
+.sync-divider {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 6px 0;
+}
+
+.sync-line {
+  flex: 1;
+  height: 1px;
+  background: rgba(0, 102, 255, 0.1);
+}
+
+.sync-label {
+  font-size: 10px;
+  color: #9CA3AF;
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+
 .input-section label {
   display: block;
   font-family: var(--font-display);
@@ -142,9 +201,10 @@ input:checked + .slider:before {
   font-size: 13px;
 }
 
-#xpathInput {
+#xpathInput,
+#cssInput {
   width: 100%;
-  padding: 12px 14px;
+  padding: 10px 12px;
   border: 2px solid rgba(0, 102, 255, 0.15);
   border-radius: 10px;
   font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
@@ -154,20 +214,24 @@ input:checked + .slider:before {
   background: #fff;
 }
 
-#xpathInput:focus {
+#xpathInput:focus,
+#cssInput:focus {
   outline: none;
   border-color: var(--electric-blue);
   box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1);
 }
 
-#xpathInput::placeholder {
+#xpathInput::placeholder,
+#cssInput::placeholder {
   color: #9CA3AF;
 }
 
 .input-actions {
   display: flex;
-  gap: 8px;
+  align-items: center;
+  gap: 10px;
   margin-top: 10px;
+  margin-bottom: 12px;
 }
 
 /* Buttons */
@@ -244,27 +308,6 @@ input:checked + .slider:before {
 
 .match-info.warning #matchCount {
   color: #F59E0B;
-}
-
-/* Copy Section */
-.copy-section {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 16px;
-}
-
-.btn-copy {
-  background: var(--electric-blue);
-  color: white;
-  flex: 1;
-  box-shadow: 0 4px 12px rgba(0, 102, 255, 0.2);
-}
-
-.btn-copy:hover:not(:disabled) {
-  background: #0055DD;
-  transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(0, 102, 255, 0.3);
 }
 
 .copy-feedback {

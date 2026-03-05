@@ -2,6 +2,10 @@
 (function() {
   'use strict';
 
+  // Prevent double-initialization (e.g. if injected more than once)
+  if (window.__xpathHighlighterVersion) return;
+  window.__xpathHighlighterVersion = 2;
+
   // Check if extension context is valid
   function isExtensionContextValid() {
     try {
@@ -113,58 +117,99 @@
     }
   }
 
+  // Check if element is actually visible (not hidden by CSS)
+  function isElementVisible(el) {
+    if (!el || el.nodeType !== Node.ELEMENT_NODE) return false;
+    const rect = el.getBoundingClientRect();
+    // display:none anywhere in the tree collapses dimensions to 0
+    if (rect.width === 0 && rect.height === 0) return false;
+    // Walk up tree checking visibility/opacity and overflow clipping
+    let node = el;
+    while (node && node !== document.documentElement) {
+      const style = window.getComputedStyle(node);
+      if (style.display === 'none' || style.visibility === 'hidden' || parseFloat(style.opacity) === 0) {
+        return false;
+      }
+      // Check if an overflow-clipping ancestor completely hides this element.
+      // getBoundingClientRect returns the element's natural box regardless of
+      // parent clipping, so we must check the parent's rendered rect directly.
+      if (node !== el) {
+        const ov = style.overflowX + ' ' + style.overflowY;
+        if (ov.includes('hidden') || ov.includes('clip')) {
+          const cr = node.getBoundingClientRect();
+          // Parent has collapsed to zero → fully clipped
+          if (cr.width === 0 || cr.height === 0) return false;
+          // Element is entirely outside the clipping parent's visible area
+          if (rect.right <= cr.left || rect.left >= cr.right ||
+              rect.bottom <= cr.top || rect.top >= cr.bottom) {
+            return false;
+          }
+        }
+      }
+      node = node.parentElement;
+    }
+    return true;
+  }
+
   // Clear all highlights
   function clearHighlights() {
     highlightedElements.forEach(el => {
       el.classList.remove('xpath-highlight');
+      el.style.removeProperty('outline');
+      el.style.removeProperty('outline-offset');
+      el.style.removeProperty('background-color');
     });
     highlightedElements = [];
   }
 
-  // Highlight elements matching XPath
-  function highlightXPath(xpath) {
-    console.log('[XPath Highlighter] highlightXPath called with:', xpath);
-    clearHighlights();
-
-    if (!xpath) {
-      console.log('[XPath Highlighter] Empty xpath, returning 0');
-      return { count: 0 };
-    }
-
-    const { elements, error } = evaluateXPath(xpath);
-
-    if (error) {
-      console.log('[XPath Highlighter] XPath error:', error);
-      return { count: 0, error };
-    }
-
-    console.log('[XPath Highlighter] Found elements:', elements.length);
+  // Apply highlight styles to a list of elements and scroll to first visible
+  function applyHighlights(elements) {
+    let visibleCount = 0;
+    let firstVisibleEl = null;
 
     elements.forEach(el => {
       el.classList.add('xpath-highlight');
+      el.style.setProperty('outline', '3px solid #4CAF50', 'important');
+      el.style.setProperty('outline-offset', '2px', 'important');
+      el.style.setProperty('background-color', 'rgba(76, 175, 80, 0.15)', 'important');
       highlightedElements.push(el);
-      console.log('[XPath Highlighter] Added highlight to:', el.tagName, el.className);
+      if (isElementVisible(el)) {
+        visibleCount++;
+        if (!firstVisibleEl) firstVisibleEl = el;
+      }
     });
 
-    currentXPath = xpath;
-
-    // Scroll first element into view if not visible
-    if (elements.length > 0) {
-      const firstEl = elements[0];
-      const rect = firstEl.getBoundingClientRect();
-      const isVisible = (
-        rect.top >= 0 &&
-        rect.left >= 0 &&
-        rect.bottom <= window.innerHeight &&
-        rect.right <= window.innerWidth
-      );
-
-      if (!isVisible) {
-        firstEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
+    if (firstVisibleEl) {
+      firstVisibleEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
-    return { count: elements.length };
+    return { count: elements.length, visibleCount };
+  }
+
+  // Highlight elements matching XPath
+  function highlightXPath(xpath) {
+    clearHighlights();
+    if (!xpath) return { count: 0, visibleCount: 0 };
+
+    const { elements, error } = evaluateXPath(xpath);
+    if (error) return { count: 0, visibleCount: 0, error };
+
+    currentXPath = xpath;
+    return applyHighlights(elements);
+  }
+
+  // Highlight elements matching a CSS selector
+  function highlightCSS(css) {
+    clearHighlights();
+    if (!css) return { count: 0, visibleCount: 0 };
+
+    try {
+      const elements = Array.from(document.querySelectorAll(css));
+      currentXPath = '';
+      return applyHighlights(elements);
+    } catch (err) {
+      return { count: 0, visibleCount: 0, error: `Invalid CSS selector: ${err.message}` };
+    }
   }
 
   // Show/hide active overlay
@@ -303,7 +348,8 @@
     safeSendMessage({
       type: 'XPATH_GENERATED',
       xpath: xpath,
-      count: result.count
+      count: result.count,
+      visibleCount: result.visibleCount
     });
 
     return false;
@@ -380,7 +426,8 @@
         sendResponse({
           isActive,
           currentXPath,
-          matchCount: highlightedElements.length
+          matchCount: highlightedElements.length,
+          version: 2
         });
         break;
 
@@ -391,8 +438,11 @@
 
       case 'HIGHLIGHT_XPATH':
         const result = highlightXPath(message.xpath);
-        console.log('[XPath Highlighter] HIGHLIGHT_XPATH result:', result);
         sendResponse(result);
+        break;
+
+      case 'HIGHLIGHT_CSS':
+        sendResponse(highlightCSS(message.css));
         break;
 
       case 'CLEAR_HIGHLIGHTS':

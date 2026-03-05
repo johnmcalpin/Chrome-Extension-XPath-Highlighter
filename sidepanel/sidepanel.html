@@ -24,30 +24,46 @@
     </div>
 
     <div class="input-section">
-      <label for="xpathInput">XPath Expression:</label>
-      <textarea
-        id="xpathInput"
-        placeholder="Enter XPath or click an element on the page..."
-        rows="3"
-      ></textarea>
-      <div class="input-actions">
-        <button id="clearBtn" class="btn btn-secondary">Clear</button>
+      <div class="field-header">
+        <label for="xpathInput">XPath</label>
+        <button id="copyXpathBtn" class="btn-icon-copy" title="Copy XPath" disabled>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+        </button>
       </div>
+      <textarea id="xpathInput" placeholder="Enter XPath or click an element..." rows="2"></textarea>
+      <div class="convert-note" id="xpathNote"></div>
+    </div>
+
+    <div class="sync-divider">
+      <div class="sync-line"></div>
+      <span class="sync-label">⇅ auto-converts</span>
+      <div class="sync-line"></div>
+    </div>
+
+    <div class="input-section">
+      <div class="field-header">
+        <label for="cssInput">CSS Selector</label>
+        <button id="copyCssBtn" class="btn-icon-copy" title="Copy CSS Selector" disabled>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+        </button>
+      </div>
+      <textarea id="cssInput" placeholder="Enter CSS selector..." rows="2"></textarea>
+      <div class="convert-note" id="cssNote"></div>
+    </div>
+
+    <div class="input-actions">
+      <button id="clearBtn" class="btn btn-secondary">Clear</button>
+      <span id="copyFeedback" class="copy-feedback">Copied!</span>
     </div>
 
     <div class="match-info" id="matchInfo">
       <span id="matchCount">0 elements matched</span>
-    </div>
-
-    <div class="copy-section">
-      <button id="copyBtn" class="btn btn-copy" disabled>
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-        </svg>
-        Copy XPath
-      </button>
-      <span id="copyFeedback" class="copy-feedback">Copied!</span>
     </div>
 
     <div class="instructions">
